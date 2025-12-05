@@ -1,5 +1,14 @@
 # DDH-based Private Intersection-Sum Protocol
 
-A simple Rust implementation of the DDH-based protocol in [On Deploying Secure Computing: Private Intersection-Sum-with-Cardinality](https://eprint.iacr.org/2019/723.pdf).
+A toy implementation of the DDH-based protocol described in [On Deploying Secure Computing: Private Intersection-Sum-with-Cardinality](https://eprint.iacr.org/2019/723.pdf).
 
-Started this as a course assignment, but they want Python code. Finished this as I procrastinate reading papers.
+Started this as a course project, but they want Python code, finished it as I procrastinate reading papers.
+
+## Stack
+* PSI: `ristretto255` for the DDH-based OPRF.
+* AHE: Paillier cryptosystem for additive homomorphic aggregation.
+
+## Usage
+```bash
+cargo run
+```
