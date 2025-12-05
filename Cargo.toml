@@ -1,0 +1,10 @@
+[package]
+name = "ddh-pi-sum"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+curve25519-dalek = { version = "4.1.3", features = ["rand_core", "digest"] }
+libpaillier = "0.6.0"
+rand = "0.8"
+sha2 = "0.10.9"
