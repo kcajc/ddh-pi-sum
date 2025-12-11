@@ -6,7 +6,13 @@ A Rust implementation of the DDH-based Private Intersection-Sum protocol describ
 * PSI: `ristretto255` with hash to curve.
 * AHE: Paillier cryptosystem for additive homomorphic aggregation.
 
-## Usage
+## Demo
 ```bash
 cargo run
 ```
+## TODO
+- [ ] Hash seeding
+- [ ] Hash on init
+- [ ] Plaintext packing
+- [ ] serde for communication measurement
+- [ ] Benchmark
