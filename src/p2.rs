@@ -4,7 +4,6 @@ use fast_paillier::backend::Integer;
 use fast_paillier::{Ciphertext, DecryptionKey, EncryptionKey};
 use rand::rngs::OsRng;
 use rand::seq::SliceRandom;
-use rand::thread_rng;
 
 pub struct P2 {
     w: Vec<(String, u32)>,
@@ -17,7 +16,7 @@ impl P2 {
         let sk = DecryptionKey::generate(&mut OsRng).unwrap();
         Self {
             w: data,
-            k_2: Scalar::random(&mut thread_rng()),
+            k_2: Scalar::random(&mut OsRng),
             sk,
         }
     }
@@ -49,7 +48,6 @@ impl P2 {
                 (blinded_point, encrypted_val)
             })
             .collect::<Vec<(RistrettoPoint, Ciphertext)>>();
-
         p2_points_and_vals.shuffle(&mut OsRng);
 
         (z, p2_points_and_vals)
@@ -57,6 +55,6 @@ impl P2 {
 
     pub fn output(&self, msg_3: &Ciphertext) {
         let sum = self.sk.decrypt(msg_3).unwrap();
-        println!("{}", sum);
+        println!("Intersection sum: {}", sum);
     }
 }

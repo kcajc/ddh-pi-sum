@@ -11,12 +11,6 @@ pub struct P1 {
     k_1: Scalar,
 }
 
-// libpaillier 0.6.0 has a bug of refusing to encrypt zero lol
-// fn encrypt_zero(pk: &EncryptionKey) -> Ciphertext {
-//     let r = Nonce::random(pk.n());
-//     r.modpow(pk.n(), pk.nn())
-// }
-
 impl P1 {
     pub fn new(items: Vec<String>) -> Self {
         Self {
@@ -43,19 +37,23 @@ impl P1 {
         let (z, p2_points_and_vals) = msg_2;
         let z_set: HashSet<CompressedRistretto> =
             HashSet::from_iter(z.iter().map(|&h| h.compress()));
+        let mut intersection_size = 0u32;
         let encrypted_sum = p2_points_and_vals
             .into_iter()
             .filter_map(|(point, encrypted_val)| {
                 let z_lookup = (self.k_1 * point).compress();
                 z_set.contains(&z_lookup).then_some(encrypted_val)
             })
-            .reduce(|acc, val| pk.oadd(&acc, &val).unwrap())
-            .unwrap();
+            .inspect(|_| intersection_size += 1)
+            .reduce(|acc, val| pk.oadd(&acc, &val).unwrap());
+        println!("Intersection size: {}", intersection_size);
 
-        // ARefresh
         let (encrypted_zero, _) = pk
             .encrypt_with_random(&mut OsRng, &Integer::zero())
             .unwrap();
-        pk.oadd(&encrypted_sum, &encrypted_zero).unwrap()
+        match encrypted_sum {
+            Some(encrypted_sum) => pk.oadd(&encrypted_sum, &encrypted_zero).unwrap(), // ARefresh
+            None => encrypted_zero, // Empty intersection
+        }
     }
 }
